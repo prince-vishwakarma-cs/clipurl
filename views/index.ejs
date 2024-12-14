@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- Main Section with Tailwind CSS Styling -->
+    <div class="relative isolate overflow-hidden bg-gray-900 py-16 sm:py-24 lg:py-32 min-h-screen flex items-center">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8 h-full w-full">
+        <div class="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-2 h-full items-center justify-center">
+              <!-- Left side (Form) -->
+              <div class="max-w-xl lg:max-w-lg flex flex-col justify-center h-full">
+                  <h2 class="text-4xl font-semibold tracking-tight text-white">Shorten Your URL</h2>
+                  <p class="mt-4 text-lg text-gray-300">Easily shorten your links for sharing with others. Just enter the long URL below and get your shortened link in seconds!</p>
+  
+                  <form id="linkForm" class="mt-6 flex flex-col space-y-4">
+                      <div>
+                          <label for="urlInput" class="block text-sm font-medium text-white">Enter the URL to shorten:</label>
+                          <input id="urlInput" type="url" required placeholder="https://example.com" class="mt-2 block w-full px-4 py-2 rounded-md bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500">
+                      </div>
+                      
+                      <button type="submit" class="mt-4 rounded-md bg-indigo-500 px-4 py-2 text-lg font-semibold text-white hover:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">Shorten Link</button>
+                  </form>
+  
+                  <div id="result" class="mt-8 hidden text-white">
+                      <h3 class="text-lg">Shortened URL:</h3>
+                      <a id="shortenedLink" href="#" target="_blank" class="mt-2 text-indigo-500 hover:text-indigo-300">Link will appear here</a>
+                  </div>
+              </div>
+  
+              <!-- Right Side (Features Section) -->
+              <dl class="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:pt-2 h-full">
+                  <div class="flex flex-col items-start justify-center">
+                      <div class="rounded-md bg-white/5 p-2 ring-1 ring-white/10">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.759 5L7.5 11.222H10.759L8.315 19L18.5 11.222H14.019L16.463 5H10.759Z" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> 
+                      </svg>
+                      </div>
+                      <dt class="mt-4 text-base font-semibold text-white">Quick & Easy</dt>
+                      <dd class="mt-2 text-base text-gray-400">Quickly shorten long URLs and make them easier to share.</dd>
+                  </div>
+  
+                  <div class="flex flex-col items-start justify-center">
+                      <div class="rounded-md bg-white/5 p-2 ring-1 ring-white/10">
+                          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path xmlns="http://www.w3.org/2000/svg" d="M18.364 5.63604C19.9926 7.26472 21 9.51472 21 12C21 16.9706 16.9706 21 12 21C9.51472 21 7.26472 19.9926 5.63604 18.364M18.364 5.63604C16.7353 4.00736 14.4853 3 12 3C7.02944 3 3 7.02944 3 12C3 14.4853 4.00736 16.7353 5.63604 18.364M18.364 5.63604L5.63604 18.364" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>                          </svg>
+                      </div>
+                      <dt class="mt-4 text-base font-semibold text-white">No Ads</dt>
+                      <dd class="mt-2 text-base text-gray-400">Enjoy an ad-free experience while shortening your links.</dd>
+                  </div>
+              </dl>
+          </div>
+      </div>
+  
+      <!-- Decorative Background (blur effect) -->
+      <div class="absolute left-1/2 top-0 -z-10 -translate-x-1/2 blur-3xl xl:-top-6" aria-hidden="true">
+          <div class="aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+      </div>
+  </div>
+  
+
+     <!-- Pass the backend prefix into JS -->
+  <script>
+    const prefix = "<%= prefix %>";  // Rendered prefix value from the server
+  </script>
+
+  <!-- JS Script -->
+  <script>
+    const form = document.getElementById("linkForm");
+    const urlInput = document.getElementById("urlInput");
+    const resultDiv = document.getElementById("result");
+    const shortenedLink = document.getElementById("shortenedLink");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const longUrl = urlInput.value;
+      if (!longUrl) {
+        alert("Please enter a valid URL.");
+        return;
+      }
+
+      try {
+        // Use dynamic prefix with fetch
+        const response = await fetch(prefix + "short", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ link: longUrl }),
+        });
+
+        // Parsing response data
+        const data = await response.json();
+
+        if (data.success) {
+          shortenedLink.textContent = data.result;
+          shortenedLink.href = data.result;
+          resultDiv.classList.remove("hidden"); // Display the result section
+        } else {
+          alert(data.message || "Something went wrong!");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to shorten the link. Try again.");
+      }
+    });
+  </script>
+</body>
+</html>

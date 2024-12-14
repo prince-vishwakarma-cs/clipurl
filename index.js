@@ -2,12 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import links from "./link.js";
 import dotenv from "dotenv";
-import path from "path"
 
 dotenv.config();
 const app = express();
-
-// Serve static files (index.html and others)
 
 app.use(express.json());
 mongoose
@@ -18,7 +15,7 @@ mongoose
   .catch((err) => console.log(err));
 
   app.get("/", (req, res) => {
-    res.sendFile(path.join(path.resolve(), "index.html"));
+    res.send("Server is working")
   });
 
 app.post("/short", async (req, res) => {

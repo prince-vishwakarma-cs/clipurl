@@ -2,11 +2,13 @@ import express from "express";
 import mongoose from "mongoose";
 import links from "./link.js";
 import dotenv from "dotenv";
+import path from "path"
 
 dotenv.config();
 const app = express();
 
-app.set("view engine", "ejs");
+// Serve static files (index.html and others)
+
 app.use(express.json());
 mongoose
   .connect("mongodb://localhost:27017", {
@@ -15,9 +17,9 @@ mongoose
   .then(() => console.log("Database is connected"))
   .catch((err) => console.log(err));
 
-app.get("/", (req, res) => {
-  res.render("index.ejs", { prefix: process.env.prefix });
-});
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(path.resolve(), "public", "index.html"));
+  });
 
 app.post("/short", async (req, res) => {
   const { link } = req.body;

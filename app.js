@@ -18,7 +18,7 @@ mongoose
   .catch((err) => console.log(err));
 
   app.get("/", (req, res) => {
-    res.sendFile(path.join(path.resolve(), "public", "index.html"));
+    res.sendFile(path.join(path.resolve(), "index.html"));
   });
 
 app.post("/short", async (req, res) => {

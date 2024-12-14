@@ -1,0 +1,3 @@
+[build]
+  functions = "netlify/functions"
+  publish = "public"  # If the 'public' folder is where your static files reside

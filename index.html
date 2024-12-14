@@ -86,11 +86,11 @@
 
       try {
         // Use dynamic prefix with fetch
-        const response = await fetch(prefix + "short", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ link: longUrl }),
-        });
+        const response = await fetch("/.netlify/functions/short", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ link: longUrl }),
+});
 
         // Parsing response data
         const data = await response.json();

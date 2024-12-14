@@ -1,3 +1,13 @@
 [build]
-  functions = "netlify/functions"
-  publish = "public"  # If the 'public' folder is where your static files reside
+  publish = "public"          # Directory containing static assets (like index.html)
+  functions = "netlify/functions"  # Serverless functions directory
+
+[[redirects]]
+  from = "/short"
+  to = "/functions/short.js"
+  status = 200
+
+[[redirects]]
+  from = "/:id"
+  to = "/functions/redirect.js"
+  status = 200

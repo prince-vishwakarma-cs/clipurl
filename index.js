@@ -2,12 +2,17 @@ import express from "express";
 import mongoose from "mongoose";
 import links from "./link.js";
 import dotenv from "dotenv";
-import cors from "cors"
+import cors from "cors"; // Import cors module
 
 dotenv.config();
 const app = express();
 
-app.use(cors());
+// CORS configuration allowing the frontend domain
+const corsOptions = {
+  origin: "https://clipurl.netlify.app",  // Specify your frontend URL here
+};
+
+app.use(cors(corsOptions));  // Apply CORS middleware with specified options
 
 app.use(express.json());
 
@@ -19,10 +24,9 @@ mongoose
   .then(() => console.log("Database connected"))
   .catch((err) => console.log(err));
 
-
-  app.get("/", (req, res) => {
-    res.send("Server is working")
-  });
+app.get("/", (req, res) => {
+  res.send("Server is working");
+});
 
 app.post("/short", async (req, res) => {
   const { link } = req.body;

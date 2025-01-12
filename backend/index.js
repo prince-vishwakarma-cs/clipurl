@@ -2,26 +2,24 @@ import express from "express";
 import mongoose from "mongoose";
 import links from "./link.js";
 import dotenv from "dotenv";
-import cors from "cors"; // Import cors module
+import cors from "cors";
 
 dotenv.config();
 const app = express();
 
-// CORS configuration allowing the frontend domain
 const corsOptions = {
-  origin: "https://clipurl.netlify.app",  // Specify your frontend URL here
+  origin: process.env.CORS_ORIGIN || "http://localhost:3000" ,
+  methods: ['GET', 'POST'],
 };
 
-app.use(cors(corsOptions));  // Apply CORS middleware with specified options
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
 mongoose
   .connect(process.env.MONGO_URI || "mongodb://localhost:27017/", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
   })
-  .then(() => console.log("Database connected"))
+  .then(() => console.log("Database connected with uri : " + process.env.MONGO_URI))
   .catch((err) => console.log(err));
 
 app.get("/", (req, res) => {
@@ -77,6 +75,6 @@ app.get("/:id", async (req, res) => {
   res.redirect(link.url);
 });
 
-app.listen(5000, () => {
-  console.log("server is running");
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`server is running on port : ${ process.env.PORT || 5000}`);
 });

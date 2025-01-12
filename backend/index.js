@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 
 app.post("/short", async (req, res) => {
   const { link } = req.body;
-  const prefix = process.env.prefix;
+  const prefix = process.env.PREFIX;
   const new_link = Math.random().toString(36).slice(2, 7);
 
   const exist = await links.exists({ shorten_url: new_link });
